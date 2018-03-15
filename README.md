@@ -8,7 +8,6 @@ Documentation is available [ReadTheDocs](http://portainer.readthedocs.io/en/late
 
 ## Portainer templates:
 
-* CecOS CaaS Proxy Manager (based on `nginx-proxy-manager & nginx :latest`)
 * Docker registry (based on `registry:latest`)
 * Nginx (based on `nginx:latest`)
 * Httpd (based on `httpd:latest`)
