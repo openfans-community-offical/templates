@@ -781,6 +781,30 @@
     ]
   },
   {
+    "type": "stack",
+    "title": "Microsoft OMS 代理",
+    "description": "Microsoft Operations Management Suite Linux 代理.",
+    "categories": ["OPS"],
+    "platform": "linux",
+    "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/microsoft.png",
+    "repository": {
+      "url": "https://github.com/openfans-community-offical/templates",
+      "stackfile": "stacks/microsoft-oms/docker-stack.yml"
+    },
+    "env": [
+      {
+        "name": "AZURE_WORKSPACE_ID",
+        "label": "Workspace ID",
+        "description": "Azure Workspace ID"
+      },
+      {
+        "name": "AZURE_PRIMARY_KEY",
+        "label": "Primary key",
+        "description": "Azure primary key"
+      }
+    ]
+  },
+  {
     "title": "Sematext Docker 代理",
     "type": "stack",
     "categories": ["Log Management", "Monitoring"],
