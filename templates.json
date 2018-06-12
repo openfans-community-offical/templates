@@ -677,6 +677,21 @@
   },
   {
     "type": "container",
+    "title": "文件浏览器",
+    "description": "基于web的文件管理器",
+    "note": "默认用户名/密码: admin/admin",
+    "categories": ["filesystem", "storage"],
+    "platform": "linux",
+    "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/filebrowser.png",
+    "image": "hacdias/filemanager:latest",
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/data", "/srv"],
+    "command": "--port 80 --database /data/database.db --scope /srv"
+  },
+  {
+    "type": "container",
     "title": "CommandBox",
     "description": "ColdFusion (CFML) CLI命令工具",
     "categories": ["development"],
