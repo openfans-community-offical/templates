@@ -886,5 +886,18 @@
         "label": "Datadog API key"
       }
     ]
+  },
+  {
+    "type": 1,
+    "title": "Sonatype Nexus3",
+    "description": "Sonatype Nexus3 仓库管理",
+    "categories": ["docker"],
+    "platform": "linux",
+    "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/sonatype.png",
+    "image": "sonatype/nexus3:latest",
+    "ports": [
+      "8081/tcp"
+    ],
+    "volumes": [{ "container": "/nexus-data"}]
   }
 ]
