@@ -1,0 +1,906 @@
+{ 
+    "version": "2",
+    "templates": [
+      {
+        "type": 1,
+        "title": "CecOS CaaS Proxy Manager",
+        "description": "CecOS CaaS 反向代理管理平台 - OPENFANS官方出品 - http://www.openfans.org",
+        "note": "<b>说明：<b></br></br>1.部署前请先设置管理账户用户名及密码。</br></br>2.<b>目录说明</b></br></br></br>（1）\"/admin\"  目录用于保存管理员账户数据和管理端访问的SSL证书,</br></br>（2）\"/config\"  目录用于保存所有的配置文件,</br></br>（3）\"/etc/letsencrypt\"  目录用于保存 \"<b>letsencrypt</b>\" 的加密证书。",
+        "categories": ["docker"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/caas-proxy-manager.png",
+        "image": "openfans/nginx-proxy-manager:latest",
+        "hostname": "caas-proxy-manager",
+        "labels": [{"name":"service","value":"caas.proxy.manager"}],
+        "restart_policy": "unless-stopped",
+        "ports": [
+          "60080/tcp","80/tcp","443/tcp"
+        ],
+        "volumes": [
+          {"container": "/admin"},
+          {"container": "/config"},
+          {"container": "/etc/letsencrypt"}
+        ],
+        "env": [
+          {"name": "ADNAME","label":"管理账户"},
+          {"name": "ADPWD","label":"账户密码"}
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Registry",
+        "description": "Docker镜像仓库服务",
+        "categories": ["docker"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/registry.png",
+        "image": "registry:latest",
+        "ports": [
+          "5000/tcp"
+        ],
+        "volumes": [{ "container": "/var/lib/registry"}]
+      },
+      {
+        "type": 1,
+        "title": "Nginx",
+        "description": "高性能的web服务器",
+        "categories": ["webserver"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/nginx.png",
+        "image": "nginx:latest",
+        "ports": [
+          "80/tcp",
+          "443/tcp"
+        ],
+        "volumes": [{"container": "/etc/nginx"}, {"container": "/usr/share/nginx/html"}]
+      },
+      {
+        "type": 1,
+        "title": "Httpd",
+        "description": "开源的HTTP服务器",
+        "categories": ["webserver"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/httpd.png",
+        "image": "httpd:latest",
+        "ports": [
+          "80/tcp"
+        ],
+        "volumes": [{"container": "/usr/local/apache2/htdocs/"}]
+      },
+      {
+        "type": 1,
+        "title": "Caddy",
+        "description": "具有自动HTTPS功能的HTTP/2 Web服务器",
+        "categories": ["webserver"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/caddy.png",
+        "image": "abiosoft/caddy:latest",
+        "ports": [
+          "80/tcp", "443/tcp", "2015/tcp"
+        ],
+        "volumes": [{"container": "/root/.caddy"}]
+      },
+      {
+        "type": 1,
+        "title": "MySQL",
+        "description": "最流行的开源数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/mysql.png",
+        "image": "mysql:latest",
+        "env": [
+          {
+            "name": "MYSQL_ROOT_PASSWORD",
+            "label": "Root password"
+          }
+        ],
+        "ports": [
+          "3306/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/mysql"}]
+      },
+      {
+        "type": 1,
+        "title": "MariaDB",
+        "description": "性能超越MySQL的开源数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/mariadb.png",
+        "image": "mariadb:latest",
+        "env": [
+          {
+            "name": "MYSQL_ROOT_PASSWORD",
+            "label": "Root password"
+          }
+        ],
+        "ports": [
+          "3306/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/mysql"}]
+      },
+      {
+        "type": 1,
+        "title": "PostgreSQL",
+        "description": "最先进的开源数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/postgres.png",
+        "image": "postgres:latest",
+        "env": [
+          {
+            "name": "POSTGRES_USER",
+            "label": "Superuser"
+          },
+          {
+            "name": "POSTGRES_PASSWORD",
+            "label": "Superuser password"
+          }
+        ],
+        "ports": [
+          "5432/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/postgresql/data"}]
+      },
+      {
+        "type": 1,
+        "title": "Mongo",
+        "description": "流行的非关系型开源数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/mongo.png",
+        "image": "mongo:latest",
+        "ports": [
+          "27017/tcp"
+        ],
+        "volumes": [{"container": "/data/db"}]
+      },
+      {
+        "type": 1,
+        "title": "CockroachDB",
+        "description": "高一致性,可横向扩展的开源分布式SQL数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/cockroachdb.png",
+        "image": "cockroachdb/cockroach:latest",
+        "ports": [
+          "26257/tcp",
+          "8080/tcp"
+        ],
+        "volumes": [{"container": "/cockroach/cockroach-data"}],
+        "command": "start --insecure"
+      },
+      {
+        "type": 1,
+        "title": "CrateDB",
+        "description": "开源的分布式SQL数据库",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/cratedb.png",
+        "image": "crate:latest",
+        "ports": [
+          "4200/tcp",
+          "4300/tcp"
+        ],
+        "volumes": [{"container": "/data"}]
+      },
+      {
+        "type": 1,
+        "title": "Elasticsearch",
+        "description": "开源的搜索和分析引擎",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/elasticsearch.png",
+        "image": "elasticsearch:latest",
+        "ports": [
+          "9200/tcp",
+          "9300/tcp"
+        ],
+        "volumes": [{"container": "/usr/share/elasticsearch/data"}]
+      },
+      {
+        "type": 1,
+        "title": "Gitlab CE",
+        "description": "开源的端到端软件开发平台(Git)",
+        "note": "默认用户名:<b>root</b>  请查看 <a href=\"https://docs.gitlab.com/omnibus/docker/README.html#after-starting-a-container\" target=\"_blank\">Gitlab官网文档</a> 了解更多详细信息",
+        "categories": ["development", "project-management"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/gitlab_ce.png",
+        "image": "gitlab/gitlab-ce:latest",
+        "ports": [
+          "80/tcp",
+          "443/tcp",
+          "22/tcp"
+        ],
+        "volumes": [
+          { "container": "/etc/gitlab" },
+          { "container": "/var/log/gitlab" },
+          { "container": "/var/opt/gitlab" }
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Minio",
+        "description": "为云应用程序和开发人员构建的分布式对象存储服务器",
+        "categories": ["storage"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/minio.png",
+        "image": "minio/minio:latest",
+        "ports": [
+          "9000/tcp"
+        ],
+        "env": [
+          {
+            "name": "MINIO_ACCESS_KEY",
+            "label": "Minio access key"
+          },
+          {
+            "name": "MINIO_SECRET_KEY",
+            "label": "Minio secret key"
+          }
+        ],
+        "volumes": [{"container": "/data"}, {"container": "/root/.minio"}],
+        "command": "server /data"
+      },
+      {
+        "type": 1,
+        "title": "Scality S3",
+        "description": "独立的AWS S3协议服务器",
+        "categories": ["storage"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/scality-s3.png",
+        "image": "scality/s3server",
+        "ports": [
+          "8000/tcp"
+        ],
+        "env": [
+          {
+            "name": "SCALITY_ACCESS_KEY",
+            "label": "Scality S3 access key"
+          },
+          {
+            "name": "SCALITY_SECRET_KEY",
+            "label": "Scality S3 secret key"
+          }
+        ],
+        "volumes": [{"container": "/usr/src/app/localData"}, {"container": "/usr/src/app/localMetadata"}]
+      },
+      {
+        "type": 1,
+        "title": "SQL Server",
+        "description": "Microsoft SQL Server (Linux版)",
+        "categories": ["database"],
+        "platform": "linux",
+        "note": "密码至少包括8个字符,包括大写字母,小写字母,10位数字和(或)符号",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/microsoft.png",
+        "image": "microsoft/mssql-server-linux:2017-GA",
+        "ports": [
+          "1433/tcp"
+        ],
+        "env": [
+          {
+            "name": "ACCEPT_EULA",
+            "set": "Y"
+          },
+          {
+            "name": "SA_PASSWORD",
+            "label": "SA password"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "title": "SQL Server",
+        "description": "用于Windows容器的Microsoft SQL Server Developer",
+        "categories": ["database"],
+        "platform": "windows",
+        "note": "密码至少包括8个字符,包括大写字母,小写字母,10位数字和(或)符号",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/microsoft.png",
+        "image": "microsoft/mssql-server-windows-developer:latest",
+        "ports": [
+          "1433/tcp"
+        ],
+        "env": [
+          {
+            "name": "ACCEPT_EULA",
+            "set": "Y"
+          },
+          {
+            "name": "sa_password",
+            "label": "SA password"
+          }
+        ],
+        "volumes": [{"container": "C:/temp/"}]
+      },
+      {
+        "type": 1,
+        "title": "SQL Server Express",
+        "description": "用于Windows容器的Microsoft SQL Server Express",
+        "categories": ["database"],
+        "platform": "windows",
+        "note": "密码至少包括8个字符,包括大写字母,小写字母,10位数字和(或)符号",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/microsoft.png",
+        "image": "microsoft/mssql-server-windows-express:latest",
+        "ports": [
+          "1433/tcp"
+        ],
+        "env": [
+          {
+            "name": "ACCEPT_EULA",
+            "set": "Y"
+          },
+          {
+            "name": "sa_password",
+            "label": "SA password"
+          }
+        ],
+        "volumes": [{"container": "C:/temp/"}]
+      },
+      {
+        "type": 1,
+        "title": "IronFunctions API",
+        "description": "开源的无服务器计算平台",
+        "categories": ["serverless"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ironfunctions.png",
+        "image": "iron/functions:latest",
+        "ports": [
+          "8080/tcp"
+        ],
+        "volumes": [{"container": "/app/data"}],
+        "privileged": true
+      },
+      {
+        "type": 1,
+        "title": "IronFunctions UI",
+        "description": "开源的IronFunctions用户端界面",
+        "categories": ["serverless"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ironfunctions.png",
+        "image": "iron/functions-ui:latest",
+        "ports": [
+          "4000/tcp"
+        ],
+        "volumes": [{"container": "/app/data"}],
+        "env": [
+          {
+            "name": "API_URL",
+            "label": "API URL"
+          }
+        ],
+        "privileged": true
+      },
+      {
+        "type": 1,
+        "title": "Solr",
+        "description": "开源的企业级搜索平台",
+        "categories": ["search-engine"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/solr.png",
+        "image": "solr:latest",
+        "ports": [
+          "8983/tcp"
+        ],
+        "volumes": [{"container": "/opt/solr/mydata"}]
+      },
+      {
+        "type": 1,
+        "title": "Redis",
+        "description": "开源的内存存储、数据结构服务器",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/redis.png",
+        "image": "redis:latest",
+        "ports": [
+          "6379/tcp"
+        ],
+        "volumes": [{"container": "/data"}]
+      },
+      {
+        "type": 1,
+        "title": "RabbitMQ",
+        "description": "高可靠的企业级消息队列服务器",
+        "categories": ["messaging"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/rabbitmq.png",
+        "image": "rabbitmq:latest",
+        "ports": [
+          "5671/tcp",
+          "5672/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/rabbitmq"}]
+      },
+      {
+        "type": 1,
+        "title": "Ghost",
+        "description": "免费和开源的博客平台",
+        "categories": ["blog"],
+        "note": "通过 <code>/ghost/</code> 目录访问博客的管理界面",
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ghost.png",
+        "image": "ghost:latest",
+        "ports": [
+          "2368/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/ghost/content"}]
+      },
+      {
+        "type": 1,
+        "title": "Plesk",
+        "description": "WebOps平台（包含主机控制面板）",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "note": "默认用户认证凭据: admin / changeme",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/plesk.png",
+        "image": "plesk/plesk:preview",
+        "ports": [
+          "21/tcp", "80/tcp", "443/tcp", "8880/tcp", "8443/tcp", "8447/tcp"
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Joomla",
+        "description": "免费和开源的CMS系统",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/joomla.png",
+        "image": "joomla:latest",
+        "env": [
+          {
+            "name": "JOOMLA_DB_HOST",
+            "label": "MySQL database host",
+            "type": "container"
+          },
+          {
+            "name": "JOOMLA_DB_PASSWORD",
+            "label": "Database password"
+          }
+        ],
+        "ports": [
+          "80/tcp"
+        ],
+        "volumes": [{"container": "/var/www/html"}]
+      },
+      {
+        "type": 1,
+        "title": "Drupal",
+        "description": "流行的开源内容管理框架",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/drupal.png",
+        "image": "drupal:latest",
+        "ports": [
+          "80/tcp"
+        ],
+        "volumes": [{"container": "/var/www/html"}]
+      },
+      {
+        "type": 1,
+        "title": "Plone",
+        "description": "建立在Zope之上的免费的开源CMS系统",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/plone.png",
+        "image": "plone:latest",
+        "ports": [
+          "8080/tcp"
+        ],
+        "volumes": [{"container": "/data"}]
+      },
+      {
+        "type": 1,
+        "title": "Magento 2",
+        "description": "开源的电子商务平台",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/magento.png",
+        "image": "alankent/gsd:latest",
+        "ports": [
+          "80/tcp",
+          "3000/tcp",
+          "3001/tcp"
+        ],
+        "volumes": [{"container": "/var/www/html/"}]
+      },
+      {
+        "type": 1,
+        "title": "Sematext Docker 代理",
+        "description": "收集日志，指标、参数和Docker事件。",
+        "categories": ["Log Management", "Monitoring"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/sematext_agent.png",
+        "image": "sematext/sematext-agent-docker:latest",
+        "name": "sematext-agent",
+        "privileged": true,
+        "env": [
+          {
+            "name": "LOGSENE_TOKEN",
+            "label": "Logs token"
+          },
+          {
+            "name": "SPM_TOKEN",
+            "label": "SPM monitoring token"
+          }
+        ],
+        "volumes": [
+          {
+            "container": "/var/run/docker.sock",
+            "bind": "/var/run/docker.sock"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Datadog agent 代理",
+        "description": "收集事件和监控指标",
+        "categories": ["Monitoring"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/datadog_agent.png",
+        "image": "datadog/agent:latest",
+        "env": [
+          {
+            "name": "DD_API_KEY",
+            "label": "Datadog API key"
+          }
+        ],
+        "volumes": [
+          {
+            "container": "/var/run/docker.sock",
+            "bind": "/var/run/docker.sock",
+            "readonly": true
+          },
+          {
+            "container": "/host/sys/fs/cgroup",
+            "bind": "/sys/fs/cgroup",
+            "readonly": true
+          },
+          {
+            "container": "/host/proc",
+            "bind": "/proc",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Mautic",
+        "description": "开源的自动化营销平台",
+        "categories": ["marketing"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/mautic.png",
+        "image": "mautic/mautic:latest",
+        "env": [
+          {
+            "name": "MAUTIC_DB_HOST",
+            "label": "MySQL database host",
+            "type": "container"
+          },
+          {
+            "name": "MAUTIC_DB_PASSWORD",
+            "label": "Database password"
+          }
+        ],
+        "ports": [
+          "80/tcp"
+        ],
+        "volumes": [{"container": "/var/www/html"}]
+      },
+      {
+        "type": 1,
+        "title": "Wowza",
+        "description": "高性能的流媒体服务器",
+        "categories": ["streaming"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/wowza.png",
+        "image": "sameersbn/wowza:4.1.2-8",
+        "env": [
+          {
+            "name": "WOWZA_ACCEPT_LICENSE",
+            "label": "Agree to Wowza EULA",
+            "set": "yes"
+          },
+          {
+            "name": "WOWZA_KEY",
+            "label": "License key"
+          }
+        ],
+        "ports": [
+          "1935/tcp",
+          "8086/tcp",
+          "8087/tcp",
+          "8088/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/wowza"}]
+      },
+      {
+        "type": 1,
+        "title": "Jenkins",
+        "description": "开源的持续集成工具",
+        "categories": ["continuous-integration"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/jenkins.png",
+        "image": "jenkins/jenkins:lts",
+        "ports": [
+          "8080/tcp",
+          "50000/tcp"
+        ],
+        "env": [
+          {
+            "name": "JENKINS_OPTS",
+            "label": "Jenkins options"
+          }
+        ],
+        "volumes": [{"container": "/var/jenkins_home"}]
+      },
+      {
+        "type": 1,
+        "title": "Redmine",
+        "description": "开源的项目管理工具",
+        "categories": ["project-management"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/redmine.png",
+        "image": "redmine:latest",
+        "ports": [
+          "3000/tcp"
+        ],
+        "volumes": [{"container": "/usr/src/redmine/files"}]
+      },
+      {
+        "type": 1,
+        "title": "Odoo",
+        "description": "开源的商业ERP、CRM、电子商务和CMS平台",
+        "categories": ["project-management"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/odoo.png",
+        "image": "odoo:latest",
+        "env": [
+          {
+            "name": "HOST",
+            "label": "PostgreSQL database host",
+            "type": "container"
+          },
+          {
+            "name": "USER",
+            "label": "Database user"
+          },
+          {
+            "name": "PASSWORD",
+            "label": "Database password"
+          }
+        ],
+        "ports": [
+          "8069/tcp"
+        ],
+        "volumes": [{"container": "/var/lib/odoo"}, {"container": "/mnt/extra-addons"}]
+      },
+      {
+        "type": 1,
+        "title": "Urbackup",
+        "description": "开源的网络备份工具",
+        "categories": ["backup"],
+        "platform": "linux",
+        "note": "此应用程序的Web界面暴露在容器内的55414端口上",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/urbackup.png",
+        "image": "cfstras/urbackup",
+        "ports": [
+          "55413/tcp", "55414/tcp", "55415/tcp", "35622/tcp"
+        ],
+        "volumes": [{"container": "/var/urbackup"}]
+      },
+      {
+        "type": 1,
+        "title": "文件浏览器",
+        "description": "基于web的文件管理器",
+        "note": "默认用户名/密码: admin/admin",
+        "categories": ["filesystem", "storage"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/filebrowser.png",
+        "image": "filebrowser/filebrowser:latest",
+        "ports": [
+          "80/tcp"
+        ],
+        "volumes": [{"container": "/data"}, {"container": "/srv"}],
+        "command": "--port 80 --database /data/database.db --scope /srv"
+      },
+      {
+        "type": 1,
+        "title": "CommandBox",
+        "description": "ColdFusion (CFML) CLI命令工具",
+        "categories": ["development"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ortussolutions-commandbox.png",
+        "image": "ortussolutions/commandbox:latest",
+        "env": [
+          {
+            "name": "CFENGINE",
+            "set": "lucee@4.5"
+          }
+        ],
+        "ports": [
+          "8080/tcp", "8443/tcp"
+        ]
+      },
+      {
+        "type": 1,
+        "title": "ContentBox",
+        "description": "开源的模块化CMS系统",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ortussolutions-contentbox.png",
+        "image": "ortussolutions/contentbox:latest",
+        "env": [
+          {
+            "name": "express",
+            "set": "true"
+          },
+          {
+            "name": "install",
+            "set": "true"
+          },
+          {
+            "name": "CFENGINE",
+            "set": "lucee@4.5"
+          }
+        ],
+        "ports": [
+          "8080/tcp", "8443/tcp"
+        ],
+        "volumes": [{"container": "/data/contentbox/db"}, {"container": "/app/includes/shared/media"}]
+      },
+      {
+        "type": 2,
+        "title": "OpenFaaS",
+        "name": "func",
+        "description": "一个构建无服务器功能的框架",
+        "note": "此应用将部署API网关和示例函数,您可以通过端口8080访问UI界面. <b>警告</b>: 堆栈的名称(name)必须为'func'！",
+        "categories": ["serverless"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/openfaas.png",
+        "repository": {
+          "url": "https://github.com/openfaas/faas",
+          "stackfile": "docker-compose.yml"
+        }
+      },
+      {
+        "type": 2,
+        "title": "IronFunctions",
+        "description": "开源的无服务器计算平台",
+        "note": "此应用将部署IronFunctions API和UI界面",
+        "categories": ["serverless"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/ironfunctions.png",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/ironfunctions/docker-stack.yml"
+        }
+      },
+      {
+        "type": 2,
+        "title": "CockroachDB",
+        "description": "CockroachDB集群",
+        "note": "如果在生产环境下部署非安全的CockroachDB集群,请访问 <a href=\"https://www.cockroachlabs.com/docs/stable/orchestrate-cockroachdb-with-docker-swarm.html\" target=\"_blank\">CockroachDB官方文档</a> 查看更多相关信息",
+        "categories": ["database"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/cockroachdb.png",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/cockroachdb/docker-stack.yml"
+        }
+      },
+      {
+        "type": 2,
+        "title": "Wordpress",
+        "description": "使用MySQL数据库连接的Wordpress",
+        "note": "部署连接到MySQL数据库的Wordpress实例",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/wordpress.png",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/wordpress/docker-stack.yml"
+        },
+        "env": [
+          {
+            "name": "MYSQL_ROOT_PASSWORD",
+            "label": "Database root password",
+            "description": "密码是MySQL root用户的密码"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "title": "Wordpress",
+        "description": "Wordpress博客 (集成MySQL数据库)",
+        "note": "部署连接到MySQL数据库的Wordpress实例",
+        "categories": ["CMS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/wordpress.png",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/wordpress/docker-compose.yml"
+        },
+        "env": [
+          {
+            "name": "MYSQL_DATABASE_PASSWORD",
+            "label": "Database root password",
+            "description": "Password used by the MySQL root user."
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "title": "Microsoft OMS 代理",
+        "description": "Microsoft Operations Management Suite Linux 代理.",
+        "categories": ["OPS"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/microsoft.png",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/microsoft-oms/docker-stack.yml"
+        },
+        "env": [
+          {
+            "name": "AZURE_WORKSPACE_ID",
+            "label": "Workspace ID",
+            "description": "Azure Workspace ID"
+          },
+          {
+            "name": "AZURE_PRIMARY_KEY",
+            "label": "Primary key",
+            "description": "Azure primary key"
+          }
+        ]
+      },
+      {
+        "title": "Sematext Docker 代理",
+        "type": 2,
+        "categories": ["Log Management", "Monitoring"],
+        "description": "收集日志，指标、参数和Docker事件。",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/sematext_agent.png",
+        "platform": "linux",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/sematext-agent-docker/docker-stack.yml"
+        },
+        "env": [
+          {
+            "name": "LOGSENE_TOKEN",
+            "label": "Logs token"
+          },
+          {
+            "name": "SPM_TOKEN",
+            "label": "SPM monitoring token"
+          }
+        ]
+      },
+      {
+        "title": "Datadog agent 代理",
+        "type": 2,
+        "categories": ["Monitoring"],
+        "description": "收集事件和监控指标",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/datadog_agent.png",
+        "platform": "linux",
+        "repository": {
+          "url": "https://github.com/openfans-community-offical/templates",
+          "stackfile": "stacks/datadog-agent/docker-stack.yml"
+        },
+        "env": [
+          {
+            "name": "API_KEY",
+            "label": "Datadog API key"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "title": "Sonatype Nexus3",
+        "description": "Sonatype Nexus3 仓库管理",
+        "categories": ["docker"],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/openfans-community-offical/templates/openfans-cecos-caas/assets/img/logos/sonatype.png",
+        "image": "sonatype/nexus3:latest",
+        "ports": [
+          "8081/tcp"
+        ],
+        "volumes": [{ "container": "/nexus-data"}]
+      }
+    ]
+}
